@@ -1,0 +1,8 @@
+Install
+-class validator 
+-class transformer
+
+Mysql
+-npm install --save typeorm mysql2
+-synchronize: false,
+in production if it is true then tbl structure will be chnage according to code
