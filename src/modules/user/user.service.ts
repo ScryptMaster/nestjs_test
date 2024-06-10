@@ -5,17 +5,24 @@ import { UserDto } from './user.dto';
 import { NotFoundException } from '@nestjs/common';
 import { User } from './user.entity';
 
-
 @Injectable()
 export class UserService {
-  constructor(@InjectRepository(UserRepository) private userRepository: UserRepository) { }
+  constructor(
+    @InjectRepository(UserRepository) private userRepository: UserRepository,
+  ) { }
 
   async getUser() {
     return await this.userRepository.find();
   }
 
   async saveUser(req: UserDto) {
-    return await this.userRepository.save(req);
+    const user = new User();
+    user.name = req.name;
+    user.email = req.email;
+    user.password = req.password;
+    return await user.save();
+    
+    //return await this.userRepository.save(req);
   }
 
   async getOneUser(id: number): Promise<User> {

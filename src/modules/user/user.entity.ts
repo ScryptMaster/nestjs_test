@@ -1,20 +1,47 @@
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  BaseEntity,
+  CreateDateColumn,
+  UpdateDateColumn,
+  BeforeInsert,
+} from 'typeorm';
 
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity } from 'typeorm';
+import * as bcrypt from 'bcrypt';
 
 @Entity('user')
 export class User extends BaseEntity {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @CreateDateColumn({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP(6)',
+  })
+  created_at: Date;
 
-    @Column({ length: 500 })
-    name: string;
+  @UpdateDateColumn({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP(6)',
+    onUpdate: 'CURRENT_TIMESTAMP(6)',
+  })
+  updated_at: Date;
 
-    @Column('text')
-    email: string;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    password: string;
+  @Column({ length: 500 })
+  name: string;
 
-    @Column({ default: 1 })
-    status: boolean;
+  @Column('text')
+  email: string;
+
+  @Column()
+  password: string;
+
+  @Column({ default: 1 })
+  status: boolean;
+
+  @BeforeInsert()
+  async hashPassword() {
+    this.password = await bcrypt.hash(this.password, 10);
+  }
 }
