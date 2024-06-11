@@ -21,7 +21,7 @@ export class UserService {
     user.email = req.email;
     user.password = req.password;
     return await user.save();
-    
+
     //return await this.userRepository.save(req);
   }
 
@@ -29,6 +29,14 @@ export class UserService {
     const user = await this.userRepository.findOne({ where: { id } });
     if (!user) {
       throw new NotFoundException(`User with ID ${id} not found`);
+    }
+    return user;
+  }
+
+  async getUseryEmail(email: string): Promise<User> {
+    const user = await this.userRepository.findOne({ where: { email } });
+    if (!user) {
+      throw new NotFoundException(`User with ID ${email} not found`);
     }
     return user;
   }
